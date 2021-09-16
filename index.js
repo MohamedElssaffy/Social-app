@@ -13,6 +13,7 @@ dbConnect();
 // Local imports
 const userRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
+const postRoute = require('./routes/post');
 
 const app = express();
 
@@ -27,6 +28,7 @@ if (process.env.NODE_ENV === 'develop') {
 // App routes
 app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
+app.use('/api/posts', postRoute);
 
 const port = process.env.PORT;
 

@@ -1,7 +1,15 @@
 const router = require('express').Router();
 
-router.get('/', (req, res) => {
-  res.send('Welcome in users route');
-});
+const userControllers = require('../controllers/users');
+
+router.get('/:id', userControllers.getUser);
+
+router.patch('/:id', userControllers.updateUser);
+
+router.delete('/:id', userControllers.deleteUser);
+
+router.patch('/:id/follow', userControllers.followUser);
+
+router.patch('/:id/unfollow', userControllers.unfollowUser);
 
 module.exports = router;
