@@ -33,10 +33,54 @@
 
 .rightbarTitle {
   margin-bottom: 16px;
+  font-weight: 500;
+  font-size: 18px;
 }
 
 .rightbarFriendList {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.rightbarInfo {
+  margin-bottom: 32px;
+}
+
+.rightbarInfoItem {
+  margin-bottom: 8px;
+}
+
+.rightbarInfoKey {
+  font-weight: 500;
+  margin-right: 16px;
+  color: #777;
+}
+
+.rightbarInfoValue {
+  font-weight: 300;
+}
+
+.rightbarFollowings {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.rightbarFollowing {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  margin-bottom: 24px;
+}
+
+.rightbarFollowingImg {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
 }

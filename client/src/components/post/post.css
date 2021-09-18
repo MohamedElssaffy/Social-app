@@ -40,10 +40,15 @@
   font-weight: 500;
   font-size: 15px;
   margin: 0 8px;
+  cursor: pointer;
 }
 
 .postDate {
   font-size: 12px;
+}
+
+.postTopRight {
+  cursor: pointer;
 }
 
 .postCenter {
