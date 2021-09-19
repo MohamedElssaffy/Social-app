@@ -1,0 +1,88 @@
+.register {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+}
+
+.registerWrapper {
+  width: 70%;
+  height: 70%;
+  display: flex;
+}
+
+.registerLeft,
+.registerRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.registerLogo {
+  font-size: 50px;
+  font-weight: 800px;
+  color: #1775ee;
+  margin-bottom: 12px;
+}
+
+.registerDesc {
+  font-size: 24px;
+}
+
+.registerBox {
+  height: 400px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.registerInput {
+  height: 50px;
+  border: 1px solid gray;
+  font-size: 18px;
+  padding-left: 16px;
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.registerInput:focus {
+  outline: none;
+}
+
+.registerBtn,
+.registerRegisterBtn {
+  height: 50px;
+  border: none;
+  background-color: #1775ee;
+  color: white;
+  font-size: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.registerForgetPass {
+  text-align: center;
+  color: #1775ee;
+}
+
+.registerRegisterBtn {
+  background-color: #42b72a;
+}

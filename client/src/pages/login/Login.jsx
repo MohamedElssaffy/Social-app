@@ -11,7 +11,17 @@ const Login = () => {
           </p>
         </div>
         <div className='loginRight'>
-          <div className='loginBox'></div>
+          <form className='loginBox'>
+            <input type='email' placeholder='Email' className='loginInput' />
+            <input
+              type='password'
+              placeholder='Password'
+              className='loginInput'
+            />
+            <button className='loginBtn'>Login</button>
+            <span className='loginForgetPass'>Forget Password ?</span>
+            <button className='loginRegisterBtn'>Create a new account</button>
+          </form>
         </div>
       </div>
     </div>
