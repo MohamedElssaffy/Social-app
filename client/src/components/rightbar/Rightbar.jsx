@@ -4,7 +4,7 @@ import { Users } from '../../dummyData';
 import OnlineFriend from '../onlineFriend/OnlineFriend';
 import { Fragment } from 'react';
 
-const Rightbar = ({ profile }) => {
+const Rightbar = ({ user }) => {
   const HomeRightbar = () => (
     <Fragment>
       <div className='birthdayContainer'>
@@ -29,15 +29,25 @@ const Rightbar = ({ profile }) => {
       <div className='rightbarInfo'>
         <div className='rightbarInfoItem'>
           <span className='rightbarInfoKey'>City: </span>
-          <span className='rightbarInfoValue'>New York</span>
+          <span className='rightbarInfoValue'>
+            {user.city ? user.city : 'Unknown'}
+          </span>
         </div>
         <div className='rightbarInfoItem'>
           <span className='rightbarInfoKey'>From: </span>
-          <span className='rightbarInfoValue'>Egypt</span>
+          <span className='rightbarInfoValue'>
+            {user.from ? user.from : 'Unknown'}
+          </span>
         </div>
         <div className='rightbarInfoItem'>
           <span className='rightbarInfoKey'>Relationship: </span>
-          <span className='rightbarInfoValue'>Single</span>
+          <span className='rightbarInfoValue'>
+            {user.relationship === 1
+              ? 'Single'
+              : user.relationship === 2
+              ? 'Married'
+              : 'Unknown'}
+          </span>
         </div>
       </div>
       <h4 className='rightbarTitle'>User friends</h4>
@@ -74,7 +84,7 @@ const Rightbar = ({ profile }) => {
   return (
     <div className='rightbar'>
       <div className='rightbarWrapper'>
-        {profile ? <ProfileRightbar /> : <HomeRightbar />}
+        {user ? <ProfileRightbar /> : <HomeRightbar />}
       </div>
     </div>
   );

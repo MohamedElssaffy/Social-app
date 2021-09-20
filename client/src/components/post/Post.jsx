@@ -1,15 +1,14 @@
 import { MoreVert } from '@mui/icons-material';
 import { useState } from 'react';
+import { format } from 'timeago.js';
 
-import { Users } from '../../dummyData';
 import './post.css';
+import { Link } from 'react-router-dom';
 
 const Post = ({ post }) => {
-  const user = Users.filter((u) => u.id === post.userId)[0];
-
-  const [like, setLike] = useState(post.like);
+  const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
-
+  const { userId: user } = post;
   const likeHandler = () => {
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
@@ -20,13 +19,15 @@ const Post = ({ post }) => {
       <div className='postWrapper'>
         <div className='postTop'>
           <div className='postTopLeft'>
-            <img
-              src={user.profilePicture}
-              alt='Person'
-              className='postProfileImg'
-            />
+            <Link to={`/profile/${user.username}`}>
+              <img
+                src={user.profilePicture || '/assets/default.png'}
+                alt='Person'
+                className='postProfileImg'
+              />
+            </Link>
             <span className='postUsername'>{user.username}</span>
-            <span className='postDate'>{post.date}</span>
+            <span className='postDate'>{format(post.createdAt)}</span>
           </div>
           <div className='postTopRight'>
             <MoreVert />
@@ -34,7 +35,7 @@ const Post = ({ post }) => {
         </div>
         <div className='postCenter'>
           <span className='postText'> {post.desc} </span>
-          <img src={post.photo} alt='' className='postImg' />
+          <img src={post.img} alt='' className='postImg' />
         </div>
         <div className='postBottom'>
           <div className='postBottomLeft'>

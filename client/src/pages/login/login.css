@@ -85,4 +85,7 @@
 
 .loginRegisterBtn {
   background-color: #42b72a;
+  text-decoration: none;
+  text-align: center;
+  line-height: 200%;
 }
