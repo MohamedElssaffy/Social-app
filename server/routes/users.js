@@ -2,7 +2,9 @@ const router = require('express').Router();
 
 const userControllers = require('../controllers/users');
 
-router.get('/:id', userControllers.getUser);
+router.get('/:id', userControllers.getUserById);
+
+router.get('/profile/:username', userControllers.getUserByName);
 
 router.patch('/:id', userControllers.updateUser);
 

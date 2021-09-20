@@ -34,11 +34,25 @@ const getPost = async (req, res) => {
 const getTimelinePosts = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
-    console.log(user.id);
     const posts = await Post.find({
       userId: { $in: [...user.following, user.id] },
-    });
+    }).populate('userId', ['username', 'profilePicture']);
+    res.json(posts);
+  } catch (err) {
+    console.error(err);
 
+    if (err.kind === 'ObjectId') return res.status(400).json('Post not found');
+
+    res.status(500).json('Server Error');
+  }
+};
+
+const getUserPosts = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    const posts = await Post.find({
+      userId: user.id,
+    }).populate('userId', ['username', 'profilePicture']);
     res.json(posts);
   } catch (err) {
     console.error(err);
@@ -123,6 +137,7 @@ module.exports = {
   createPost,
   getPost,
   getTimelinePosts,
+  getUserPosts,
   updatePost,
   deletePost,
   likePost,

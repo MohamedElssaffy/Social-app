@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../db/models/User');
 
-const getUser = async (req, res) => {
+const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
 
@@ -14,6 +14,22 @@ const getUser = async (req, res) => {
     if (err.kind === 'ObjectId') {
       return res.status(400).json('User not found');
     }
+    res.status(500).json('Server Error');
+  }
+};
+
+const getUserByName = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username }).select(
+      '-password'
+    );
+
+    if (!user) return res.status(400).json('User not found');
+
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+
     res.status(500).json('Server Error');
   }
 };
@@ -125,4 +141,11 @@ const unfollowUser = async (req, res) => {
   }
 };
 
-module.exports = { getUser, updateUser, deleteUser, followUser, unfollowUser };
+module.exports = {
+  getUserById,
+  getUserByName,
+  updateUser,
+  deleteUser,
+  followUser,
+  unfollowUser,
+};
