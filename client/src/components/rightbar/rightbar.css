@@ -61,6 +61,29 @@
   font-weight: 300;
 }
 
+.rightbarFollowBtn {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  border: none;
+  color: white;
+  background-color: #1872f2;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+}
+
+.rightbarFollowBtn:focus {
+  outline: none;
+}
+
 .rightbarFollowings {
   display: flex;
   justify-content: space-between;
@@ -72,6 +95,9 @@
   flex-direction: column;
   cursor: pointer;
   margin-bottom: 24px;
+  text-decoration: none;
+  color: #777;
+  text-align: center;
 }
 
 .rightbarFollowingImg {

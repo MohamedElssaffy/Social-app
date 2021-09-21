@@ -1,17 +1,29 @@
 import { MoreVert } from '@mui/icons-material';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { format } from 'timeago.js';
 
 import './post.css';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
+import axios from 'axios';
 
 const Post = ({ post }) => {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const { userId: user } = post;
-  const likeHandler = () => {
-    setLike(isLiked ? like - 1 : like + 1);
-    setIsLiked(!isLiked);
+
+  const { user: currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    setIsLiked(post.likes.includes(currentUser._id));
+  }, [post, currentUser]);
+
+  const likeHandler = async () => {
+    try {
+      await axios.patch(`/posts/${post._id}/like`, { userId: currentUser._id });
+      setLike(isLiked ? like - 1 : like + 1);
+      setIsLiked(!isLiked);
+    } catch (err) {}
   };
 
   return (
@@ -35,7 +47,7 @@ const Post = ({ post }) => {
         </div>
         <div className='postCenter'>
           <span className='postText'> {post.desc} </span>
-          <img src={post.img} alt='' className='postImg' />
+          <img src={`/assets/posts/${post.img}`} alt='' className='postImg' />
         </div>
         <div className='postBottom'>
           <div className='postBottomLeft'>

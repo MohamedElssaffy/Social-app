@@ -45,7 +45,9 @@ const Login = () => {
               required
               minLength='8'
             />
-            <button className='loginBtn'>Login</button>
+            <button className='loginBtn' type='submit'>
+              Login
+            </button>
             <span className='loginForgetPass'>Forget Password ?</span>
 
             <Link to='/register' className='loginRegisterBtn'>

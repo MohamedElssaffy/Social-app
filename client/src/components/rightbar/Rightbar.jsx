@@ -2,9 +2,38 @@ import './rightbar.css';
 
 import { Users } from '../../dummyData';
 import OnlineFriend from '../onlineFriend/OnlineFriend';
-import { Fragment } from 'react';
+import { Fragment, useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
+import { Add, Remove } from '@mui/icons-material';
+import axios from 'axios';
+import { follow, unFollow } from '../../context/AuthActions';
 
 const Rightbar = ({ user }) => {
+  const { user: currentUser, dispatch } = useContext(AuthContext);
+  const [isFollowed, setIsFollowed] = useState(
+    !!currentUser.following.includes(user?._id)
+  );
+
+  const onClick = async () => {
+    try {
+      if (isFollowed) {
+        await axios.patch(`/users/${user._id}/unfollow`, {
+          userId: currentUser._id,
+        });
+        dispatch(unFollow());
+      } else {
+        await axios.patch(`/users/${user._id}/follow`, {
+          userId: currentUser._id,
+        });
+        dispatch(follow());
+      }
+      setIsFollowed(!isFollowed);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const HomeRightbar = () => (
     <Fragment>
       <div className='birthdayContainer'>
@@ -25,6 +54,12 @@ const Rightbar = ({ user }) => {
 
   const ProfileRightbar = () => (
     <Fragment>
+      {user.username !== currentUser.username && (
+        <button onClick={onClick} className='rightbarFollowBtn'>
+          {isFollowed ? 'Unfollow' : 'Follow'}
+          {isFollowed ? <Remove /> : <Add />}
+        </button>
+      )}
       <h4 className='rightbarTitle'>User information</h4>
       <div className='rightbarInfo'>
         <div className='rightbarInfoItem'>
@@ -53,30 +88,21 @@ const Rightbar = ({ user }) => {
       <h4 className='rightbarTitle'>User friends</h4>
 
       <div className='rightbarFollowings'>
-        <div className='rightbarFollowing'>
-          <img
-            src='/assets/persons/2.jpeg'
-            alt=''
-            className='rightbarFollowingImg'
-          />
-          <span className='rightbarFollowingName'>username</span>
-        </div>
-        <div className='rightbarFollowing'>
-          <img
-            src='/assets/persons/3.jpeg'
-            alt=''
-            className='rightbarFollowingImg'
-          />
-          <span className='rightbarFollowingName'>username</span>
-        </div>
-        <div className='rightbarFollowing'>
-          <img
-            src='/assets/persons/4.jpeg'
-            alt=''
-            className='rightbarFollowingImg'
-          />
-          <span className='rightbarFollowingName'>username</span>
-        </div>
+        {user.following &&
+          user.following.map((friend) => (
+            <Link
+              key={friend._id}
+              to={`/profile/${friend.username}`}
+              className='rightbarFollowing'
+            >
+              <img
+                src={friend.profilePicture || '/assets/default.png'}
+                alt=''
+                className='rightbarFollowingImg'
+              />
+              <span className='rightbarFollowingName'>{friend.username}</span>
+            </Link>
+          ))}
       </div>
     </Fragment>
   );

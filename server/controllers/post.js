@@ -1,11 +1,47 @@
+const path = require('path');
+const multer = require('multer');
+
 const Post = require('../db/models/Post');
 const User = require('../db/models/User');
 
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, path.join(__dirname, '../../client/public/assets/posts'));
+  },
+  filename(req, file, cb) {
+    cb(
+      null,
+      `${Date.now()}-${Math.round(Math.random() * 100)}-${file.originalname}`
+    );
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 3000000,
+  },
+  fileFilter(req, file, cb) {
+    if (!file) return cb(null, false);
+
+    if (!file.originalname.match(/\.(png|jpeg|jpg)$/))
+      return cb(new Error('You must upload an image'));
+
+    cb(null, true);
+  },
+});
+
 const createPost = async (req, res) => {
   try {
-    const { userId, img, desc } = req.body;
+    const img = req.file;
+    const { userId, desc } = req.body;
+    console.log(desc);
+    console.log(userId);
 
-    const post = new Post({ userId, img, desc });
+    const post = new Post({ userId, desc });
+    if (img) {
+      post.img = img.filename;
+    }
 
     await post.save();
     res.status(201).json(post);
@@ -36,7 +72,9 @@ const getTimelinePosts = async (req, res) => {
     const user = await User.findById(req.params.userId);
     const posts = await Post.find({
       userId: { $in: [...user.following, user.id] },
-    }).populate('userId', ['username', 'profilePicture']);
+    })
+      .populate('userId', ['username', 'profilePicture'])
+      .sort('-createdAt');
     res.json(posts);
   } catch (err) {
     console.error(err);
@@ -52,7 +90,9 @@ const getUserPosts = async (req, res) => {
     const user = await User.findOne({ username: req.params.username });
     const posts = await Post.find({
       userId: user.id,
-    }).populate('userId', ['username', 'profilePicture']);
+    })
+      .populate('userId', ['username', 'profilePicture'])
+      .sort('-createdAt');
     res.json(posts);
   } catch (err) {
     console.error(err);
@@ -141,4 +181,5 @@ module.exports = {
   updatePost,
   deletePost,
   likePost,
+  upload,
 };

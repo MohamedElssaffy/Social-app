@@ -20,10 +20,9 @@ const getUserById = async (req, res) => {
 
 const getUserByName = async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username }).select(
-      '-password'
-    );
-
+    const user = await User.findOne({ username: req.params.username })
+      .select('-password')
+      .populate('following', ['username', 'profilePicture']);
     if (!user) return res.status(400).json('User not found');
 
     res.json(user);
