@@ -37,4 +37,25 @@ const getConv = async (req, res) => {
   }
 };
 
-module.exports = { createConv, getConv };
+const getAconv = async (req, res) => {
+  try {
+    const { sender, receiver } = req.params;
+    console.log(sender, receiver);
+    const conv = await Conversation.findOne({
+      $or: [
+        { sender, receiver },
+        { receiver: sender, sender: receiver },
+      ],
+    }).populate('sender receiver', ['username', 'profilePicture']);
+
+    res.json(conv);
+  } catch (err) {
+    console.error(err);
+    if (err.kind === 'ObjectId') {
+      return res.status(400).json('Invalid User');
+    }
+    res.status(500).json('Server Error');
+  }
+};
+
+module.exports = { createConv, getConv, getAconv };

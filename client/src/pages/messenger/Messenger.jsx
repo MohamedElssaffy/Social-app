@@ -5,13 +5,15 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import axios from 'axios';
+import { io } from 'socket.io-client';
+
 import './messenger.css';
 import Topbar from '../../components/topbar/Topbar';
 import Conversation from '../../components/conversation/Conversation';
 import Message from '../../components/message/Message';
 import ChatOnline from '../../components/chatOnline/ChatOnline';
 import { AuthContext } from '../../context/AuthContext';
-import axios from 'axios';
 
 const Messenger = () => {
   const { user } = useContext(AuthContext);
@@ -19,8 +21,35 @@ const Messenger = () => {
   const [currentConv, setCurrentConv] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState([]);
-
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const socket = useRef();
   const scrollRef = useRef();
+
+  useEffect(() => {
+    socket.current = io('ws://localhost:8000');
+    socket.current.on('getMessage', (data) => {
+      setArrivalMessage({
+        sender: { _id: data.senderId },
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  });
+
+  useEffect(() => {
+    arrivalMessage &&
+      (currentConv?.sender._id === arrivalMessage.sender._id ||
+        currentConv?.receiver._id === arrivalMessage.sender._id) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentConv]);
+
+  useEffect(() => {
+    socket.current.emit('addUser', user._id);
+    socket.current.on('getUsers', (users) => {
+      setOnlineUsers(users.map((u) => u.userId));
+    });
+  }, [user]);
 
   useEffect(() => {
     const getConv = async () => {
@@ -31,6 +60,11 @@ const Messenger = () => {
         console.error(err);
       }
     };
+
+    getConv();
+  }, [user]);
+
+  useEffect(() => {
     const getMsg = async () => {
       try {
         const res = await axios.get(`/message/${currentConv?._id}`);
@@ -40,8 +74,7 @@ const Messenger = () => {
       }
     };
     getMsg();
-    getConv();
-  }, [user, currentConv]);
+  }, [currentConv]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -54,8 +87,19 @@ const Messenger = () => {
       conversation: currentConv._id,
     };
 
+    const receiverId =
+      currentConv.sender._id === user._id
+        ? currentConv.receiver._id
+        : currentConv.sender._id;
+
     try {
       const res = await axios.post('/message', message);
+      socket.current.emit('sendMessage', {
+        senderId: user._id,
+        receiverId,
+        text: newMessage,
+      });
+      res.data.sender = { _id: user._id };
       setMessages([...messages, res.data]);
       setNewMessage('');
     } catch (err) {
@@ -89,7 +133,10 @@ const Messenger = () => {
                   {messages.map((msg) => {
                     return (
                       <div key={msg._id} ref={scrollRef}>
-                        <Message message={msg} own={msg.sender === user._id} />
+                        <Message
+                          message={msg}
+                          own={msg.sender._id === user._id}
+                        />
                       </div>
                     );
                   })}
@@ -117,7 +164,11 @@ const Messenger = () => {
         </div>
         <div className='chatOnline'>
           <div className='chatWrapper'>
-            <ChatOnline />
+            <ChatOnline
+              onlineUsers={onlineUsers}
+              currentId={user._id}
+              setCurrentConv={setCurrentConv}
+            />
           </div>
         </div>
       </div>

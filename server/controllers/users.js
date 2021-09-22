@@ -4,7 +4,9 @@ const User = require('../db/models/User');
 
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select('-password');
+    const user = await User.findById(req.params.id)
+      .select('-password')
+      .populate('following followers', ['username', 'profilePicture']);
 
     if (!user) return res.status(400).json('User not found');
 

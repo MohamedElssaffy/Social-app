@@ -22,7 +22,7 @@ const getMsg = async (req, res) => {
   try {
     const messages = await Message.find({
       conversation: req.params.conversationId,
-    });
+    }).populate('sender', ['username', 'profilePicture']);
 
     res.json(messages);
   } catch (err) {
