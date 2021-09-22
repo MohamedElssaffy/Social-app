@@ -14,6 +14,8 @@ dbConnect();
 const userRoute = require('./routes/users');
 const authRoute = require('./routes/auth');
 const postRoute = require('./routes/post');
+const conversationRoute = require('./routes/conversation');
+const messageRoute = require('./routes/message');
 
 const app = express();
 
@@ -29,6 +31,8 @@ if (process.env.NODE_ENV === 'develop') {
 app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/posts', postRoute);
+app.use('/api/conversation', conversationRoute);
+app.use('/api/message', messageRoute);
 
 const port = process.env.PORT;
 

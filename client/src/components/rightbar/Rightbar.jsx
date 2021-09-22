@@ -11,9 +11,13 @@ import { follow, unFollow } from '../../context/AuthActions';
 
 const Rightbar = ({ user }) => {
   const { user: currentUser, dispatch } = useContext(AuthContext);
-  const [isFollowed, setIsFollowed] = useState(
-    !!currentUser.following.includes(user?._id)
-  );
+  let isFriend;
+  if (user) {
+    isFriend = currentUser.following.includes(user._id);
+  } else {
+    isFriend = false;
+  }
+  const [isFollowed, setIsFollowed] = useState(isFriend);
 
   const onClick = async () => {
     try {

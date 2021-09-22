@@ -11,6 +11,7 @@ import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
+import Messenger from './pages/messenger/Messenger';
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -26,6 +27,11 @@ function App() {
         </Route>
         {user ? (
           <Route path='/profile/:username' component={Profile} />
+        ) : (
+          <Redirect to='/login' />
+        )}
+        {user ? (
+          <Route path='/messenger' component={Messenger} />
         ) : (
           <Redirect to='/login' />
         )}
